@@ -1,5 +1,6 @@
 ---
 title: "Reproducible Research: Peer Assessment 1"
+Author: Victor Bucha
 output: 
   html_document:
     keep_md: true
@@ -7,12 +8,25 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
+``` {R}
+#create connection to zip file
+con<-unz("activity.zip","activity.csv")
+# read csv from connection
+data<-read.csv(con,na.strings = "NA",colClasses=c("numeric","Date","numeric"))
+```
 
 ## What is mean total number of steps taken per day?
+``` {R}
+library (dplyr,warn.conflicts=FALSE)
+data_day<-data %>% group_by(date) %>% 
+        summarise(steps.sum=sum(steps,na.rm = TRUE))
 
+steps_mean=mean(data_day$steps.sum)
+steps_median=median(data_day$steps.sum)
+```
 
+Mean total number of steps taken per day = **`r steps_mean`**  
+Median total number of steps taken per day = **`r steps_median`**
 
 ## What is the average daily activity pattern?
 
