@@ -8,7 +8,7 @@ output:
 
 
 ## Loading and preprocessing the data
-``` {R}
+``` {R loadingdata}
 #create connection to zip file
 con<-unz("activity.zip","activity.csv")
 # read csv from connection
@@ -16,17 +16,35 @@ data<-read.csv(con,na.strings = "NA",colClasses=c("numeric","Date","numeric"))
 ```
 
 ## What is mean total number of steps taken per day?
-``` {R}
+``` {R calculate basic stat}
 library (dplyr,warn.conflicts=FALSE)
+library(ggplot2)
+#summarize steps by day
 data_day<-data %>% group_by(date) %>% 
         summarise(steps.sum=sum(steps,na.rm = TRUE))
 
+#estimate mean and median steps per day
 steps_mean=mean(data_day$steps.sum)
 steps_median=median(data_day$steps.sum)
 ```
 
-Mean total number of steps taken per day = **`r steps_mean`**  
-Median total number of steps taken per day = **`r steps_median`**
+####Mean total number of steps taken per day = **`r format(steps_mean, digits = 2)`**  
+####Median total number of steps taken per day = **`r format(steps_median,digits=2)`**
+
+``` {R draw histogram}
+#show histogram of steps per day
+ggplot(data =data_day,aes(steps.sum) )+
+        geom_histogram( fill=I("red"),binwidth=2000,col="black",alpha=0.6)+
+        labs(title="Histogram of steps per day",x="Steps",y="Frequency")+
+        geom_vline(aes(xintercept=steps_mean,color="Mean"),size=1.1,linetype=2,show_guide=TRUE)+
+        geom_vline(aes(xintercept=steps_median,color="Median"),size=1.1,linetype=2,show_guide=TRUE)+
+        scale_colour_manual(name="Stats", values=c(Median="blue",Mean="green"))
+```
+
+``` {R save figure,message =FALSE}
+#save plot to file
+ggsave("figures/plot1.png")
+```
 
 ## What is the average daily activity pattern?
 
