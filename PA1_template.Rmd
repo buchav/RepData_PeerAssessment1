@@ -36,8 +36,10 @@ steps_median=median(data_day$steps.sum)
 ggplot(data =data_day,aes(steps.sum) )+
         geom_histogram( fill=I("red"),binwidth=2000,col="black",alpha=0.6)+
         labs(title="Histogram of steps per day",x="Steps",y="Frequency")+
-        geom_vline(aes(xintercept=steps_mean,color="Mean"),size=1.1,linetype=2,show_guide=TRUE)+
-        geom_vline(aes(xintercept=steps_median,color="Median"),size=1.1,linetype=2,show_guide=TRUE)+
+        geom_vline(aes(xintercept=steps_mean,color="Mean"),
+                   size=1.1,linetype=2,show_guide=TRUE)+
+        geom_vline(aes(xintercept=steps_median,color="Median"),
+                   size=1.1,linetype=2,show_guide=TRUE)+
         scale_colour_manual(name="Stats", values=c(Median="blue",Mean="green"))
 ```
 
@@ -47,8 +49,23 @@ ggsave("figures/plot1.png")
 ```
 
 ## What is the average daily activity pattern?
-
-
+``` {R calculate activity pattern}
+#summarize steps by interval
+data_interval<-data %>% group_by(interval) %>% 
+        summarise(steps.sum=mean(steps,na.rm = TRUE))
+#find interval with maximum average s
+max_interval<-data_interval$interval[which.max(data_interval$steps.sum)]
+```
+  
+#### Interval **`r format(max_interval, digits = 2)`**, on average across all the days in the dataset, contains the maximum number of steps  
+``` {R Draw activity pattern plot}
+#draw plot
+plot(data_interval$steps.sum~data_interval$interval,type="l",xlab="Interval",
+     ylab="Mean steps",main="Activity pattern",col="blue")
+abline(v=max_interval,col="red",lty = 2)
+text(max_interval+490,190,paste("Interval with max steps:",
+                                as.character(max_interval)),col="red")
+```
 
 ## Imputing missing values
 
