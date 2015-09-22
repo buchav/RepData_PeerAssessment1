@@ -22,14 +22,13 @@ library(ggplot2)
 #summarize steps by day
 data_day<-data %>% group_by(date) %>% 
         summarise(steps.sum=sum(steps,na.rm = TRUE))
-
 #estimate mean and median steps per day
 steps_mean=mean(data_day$steps.sum)
 steps_median=median(data_day$steps.sum)
 ```
 
-####Mean total number of steps taken per day = **`r format(steps_mean, digits = 2)`**  
-####Median total number of steps taken per day = **`r format(steps_median,digits=2)`**
+####Mean total number of steps taken per day = **`r format(steps_mean, nsmall = 2)`**  
+####Median total number of steps taken per day = **`r format(steps_median,nsmall=2)`**
 
 ``` {R draw histogram}
 #show histogram of steps per day
@@ -68,7 +67,52 @@ text(max_interval+490,190,paste("Interval with max steps:",
 ```
 
 ## Imputing missing values
+``` {R calculate number of NAs}
+na_number<-sum(is.na(data$step))
+```
+#### Total number of missing values is  **`r format(na_number, digits = 2)`**
 
+Let us make imputting of NAs with mean for that 5-minute interval  
+``` {R imput missing values}
+#imput NA with mean for that 5-minute interval
+data_imput<-data %>% group_by(interval) %>%
+        mutate(steps=ifelse(is.na(steps),mean(steps,na.rm=TRUE),steps))
+# summarise by date
+data_day_imput<-data_imput %>% group_by(date) %>% 
+        summarise(steps.sum=sum(steps,na.rm = TRUE))
+```
 
+``` {R calculate mean and median for imputting dataset,results='asis'}
+#estimate mean and median steps per day
+steps_mean_imput=mean(data_day_imput$steps.sum)
+steps_median_imput=median(data_day_imput$steps.sum)
+#create dataframe for mean and median
+sum_mean<-data.frame(mean=c(steps_mean,steps_mean_imput),median=c(steps_median,steps_mean_imput))
+row.names(sum_mean)<-c("Initial data with NAs","Imputing missing data")
+```
+###Mean and median total number of steps taken per day
+``` {R prepare table,results='asis'}
+library(xtable)
+tab.attributes <- 'border="0" align="left" bgcolor="#FFCC00" 
+        style="border-collapse: collapse; text-align: right; width: 50%; "'
+print(xtable(sum_mean),type="html",html.table.attributes = tab.attributes)  
+```
+___________
+  **Conclusion:** Imputting of the data affects mean and median values in 
+  comparision with initial data from the first part of assigment. 
+  Median and mean values increased after imputting of NAs.
+  
+``` {R prepare data for combined histogram}
+# merge initial dataset and dataset with imputting NA's
+data_total<-rbind(data_day_imput %>% mutate(group=factor("Imputting missing data"))
+                  ,data_day %>% mutate(group=factor("Initial data with NAs")))
+```
+
+``` {R draw histogram for initial and imputting data}
+#show histogram of steps per day and per group
+ggplot(data =data_total,aes(steps.sum,fill=group))+
+        geom_histogram(binwidth=2000,col="black",alpha=0.6,position = "dodge")+
+        labs(title="Histogram of steps per day",x="Steps",y="Frequency")
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
