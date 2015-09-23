@@ -88,21 +88,22 @@ data_day_imput<-data_imput %>% group_by(date) %>%
 #estimate mean and median steps per day
 steps_mean_imput=mean(data_day_imput$steps.sum)
 steps_median_imput=median(data_day_imput$steps.sum)
-#create dataframe for mean and median
-sum_mean<-data.frame(mean=c(steps_mean,steps_mean_imput),median=c(steps_median,steps_mean_imput))
-row.names(sum_mean)<-c("Initial data with NAs","Imputing missing data")
 ```
 ###Mean and median total number of steps taken per day
 
 ```r
 library(xtable)
+#create dataframe for mean and median
+sum_mean<-data.frame(mean=c(steps_mean,steps_mean_imput),
+                     median=c(steps_median,steps_mean_imput))
+row.names(sum_mean)<-c("Initial data with NAs","Imputing missing data")
 tab.attributes <- 'border="0" align="left" bgcolor="#FFCC00" 
         style="border-collapse: collapse; text-align: right; width: 50%; "'
 print(xtable(sum_mean),type="html",html.table.attributes = tab.attributes)  
 ```
 
 <!-- html table generated in R 3.2.2 by xtable 1.7-4 package -->
-<!-- Wed Sep 23 09:58:21 2015 -->
+<!-- Wed Sep 23 10:07:36 2015 -->
 <table border="0" bgcolor="#FFCC00" 
         style="border-collapse: collapse; text-align: right; width: 50%; ">
 <tr> <th>  </th> <th> mean </th> <th> median </th>  </tr>

@@ -130,19 +130,20 @@ data_day_imput&lt;-data_imput %&gt;% group_by(date) %&gt;%
         summarise(steps.sum=sum(steps,na.rm = TRUE))</code></pre>
 <pre class="r"><code>#estimate mean and median steps per day
 steps_mean_imput=mean(data_day_imput$steps.sum)
-steps_median_imput=median(data_day_imput$steps.sum)
-#create dataframe for mean and median
-sum_mean&lt;-data.frame(mean=c(steps_mean,steps_mean_imput),median=c(steps_median,steps_mean_imput))
-row.names(sum_mean)&lt;-c(&quot;Initial data with NAs&quot;,&quot;Imputing missing data&quot;)</code></pre>
+steps_median_imput=median(data_day_imput$steps.sum)</code></pre>
 </div>
 <div id="mean-and-median-total-number-of-steps-taken-per-day" class="section level3">
 <h3>Mean and median total number of steps taken per day</h3>
 <pre class="r"><code>library(xtable)
+#create dataframe for mean and median
+sum_mean&lt;-data.frame(mean=c(steps_mean,steps_mean_imput),
+                     median=c(steps_median,steps_mean_imput))
+row.names(sum_mean)&lt;-c(&quot;Initial data with NAs&quot;,&quot;Imputing missing data&quot;)
 tab.attributes &lt;- 'border=&quot;0&quot; align=&quot;left&quot; bgcolor=&quot;#FFCC00&quot; 
         style=&quot;border-collapse: collapse; text-align: right; width: 50%; &quot;'
 print(xtable(sum_mean),type=&quot;html&quot;,html.table.attributes = tab.attributes)  </code></pre>
 <!-- html table generated in R 3.2.2 by xtable 1.7-4 package -->
-<!-- Wed Sep 23 09:58:21 2015 -->
+<!-- Wed Sep 23 10:07:36 2015 -->
 <table border="0" bgcolor="#FFCC00" style="border-collapse: collapse; text-align: right; width: 50%; ">
 <tr>
 <th>
