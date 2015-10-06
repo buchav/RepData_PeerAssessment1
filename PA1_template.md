@@ -103,7 +103,7 @@ print(xtable(sum_mean),type="html",html.table.attributes = tab.attributes)
 ```
 
 <!-- html table generated in R 3.2.2 by xtable 1.7-4 package -->
-<!-- Wed Sep 23 10:07:36 2015 -->
+<!-- Tue Oct 06 17:00:57 2015 -->
 <table border="0" bgcolor="#FFCC00" 
         style="border-collapse: collapse; text-align: right; width: 50%; ">
 <tr> <th>  </th> <th> mean </th> <th> median </th>  </tr>
